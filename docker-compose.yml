@@ -1,0 +1,87 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: mini_siem_postgres
+    environment:
+      POSTGRES_USER: siem
+      POSTGRES_PASSWORD: siem
+      POSTGRES_DB: siem
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U siem -d siem"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    container_name: mini_siem_backend
+    environment:
+      DB_HOST: postgres
+      DB_NAME: siem
+      DB_USER: siem
+      DB_PASSWORD: siem
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-in-production}
+      WINDOWS_AGENT_TOKEN: ${WINDOWS_AGENT_TOKEN:-dev-windows-agent-token}
+      TELEGRAM_ENABLED: ${TELEGRAM_ENABLED:-false}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+      TELEGRAM_MIN_SEVERITY: ${TELEGRAM_MIN_SEVERITY:-critical}
+      THREAT_INTEL_ENABLED: ${THREAT_INTEL_ENABLED:-false}
+      VIRUSTOTAL_API_KEY: ${VIRUSTOTAL_API_KEY:-}
+      ABUSEIPDB_API_KEY: ${ABUSEIPDB_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  collector:
+    build: ./backend
+    container_name: mini_siem_collector
+    command: ["python", "collector.py"]
+    environment:
+      BACKEND_URL: http://backend:8000
+      LOG_SOURCES: host_auth,host_syslog,docker
+      HOST_AUTH_LOG: /host/var/log/auth.log
+      HOST_SYSLOG: /host/var/log/syslog
+      DOCKER_CONTAINER_NAME: mini_siem_vulnerable
+    volumes:
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - backend
+      - vulnerable
+
+  network_collector:
+    build: ./backend
+    container_name: mini_siem_network_collector
+    command: ["python", "network_collector.py"]
+    environment:
+      BACKEND_URL: http://backend:8000
+      WINDOWS_AGENT_TOKEN: ${WINDOWS_AGENT_TOKEN:-dev-windows-agent-token}
+      SYSLOG_PORT: 5514
+      SOURCE_NAME: router-casa
+    ports:
+      - "5514:5514/udp"
+    depends_on:
+      - backend
+
+  frontend:
+    build: ./frontend
+    container_name: mini_siem_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  vulnerable:
+    build: ./vulnerable
+    container_name: mini_siem_vulnerable
+    ports:
+      - "2222:22"
+
+volumes:
+  postgres_data:

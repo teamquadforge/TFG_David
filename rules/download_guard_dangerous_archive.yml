@@ -1,0 +1,22 @@
+title: ZIP perillós a Descàrregues
+id: mini-siem-download-guard-dangerous-archive
+status: experimental
+severity: high
+mitre: T1204 User Execution
+logsource:
+  product: windows
+  service: download_guard
+condition:
+  event_action: download_dangerous_archive
+  suspicious_extensions:
+    - .exe
+    - .ps1
+    - .bat
+    - .cmd
+    - .lnk
+    - .docm
+    - .xlsm
+response:
+  - no executar el fitxer
+  - comprovar hash i origen
+  - eliminar o aïllar si no és confiable

@@ -1,0 +1,21 @@
+title: PowerShell sospitós
+id: mini-siem-windows-powershell-suspicious
+status: experimental
+severity: high
+mitre: T1059.001 PowerShell
+logsource:
+  product: windows
+  service: powershell
+condition:
+  event_action: powershell_scriptblock
+  contains:
+    - EncodedCommand
+    - DownloadString
+    - Invoke-Expression
+    - FromBase64String
+false_positives:
+  - scripts administratius coneguts
+response:
+  - revisar usuari i command line
+  - buscar descàrrega o fitxer relacionat
+  - crear incident si hi ha persistència

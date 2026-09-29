@@ -1,0 +1,16 @@
+Apr 28 12:00:01 lab sshd[1001]: Failed password for root from 10.0.0.5 port 54122 ssh2
+Apr 28 12:00:03 lab sshd[1002]: Failed password for root from 10.0.0.5 port 54123 ssh2
+Apr 28 12:00:05 lab sshd[1003]: Failed password for root from 10.0.0.5 port 54124 ssh2
+Apr 28 12:00:07 lab sshd[1004]: Failed password for root from 10.0.0.5 port 54125 ssh2
+Apr 28 12:00:09 lab sshd[1005]: Failed password for root from 10.0.0.5 port 54126 ssh2
+Apr 28 12:01:15 lab sshd[1006]: Failed password for admin from 203.0.113.77 port 40001 ssh2
+Apr 28 12:01:16 lab sshd[1007]: Failed password for test from 203.0.113.77 port 40002 ssh2
+Apr 28 12:01:17 lab sshd[1008]: Failed password for oracle from 203.0.113.77 port 40003 ssh2
+Apr 28 12:01:18 lab sshd[1009]: Failed password for deploy from 203.0.113.77 port 40004 ssh2
+Apr 28 12:02:00 lab sshd[1010]: Accepted password for david from 10.0.0.5 port 54130 ssh2
+198.51.100.23 - - [28/Apr/2026:12:03:00 +0000] "GET /.env HTTP/1.1" 404 123 "-" "curl/8.0"
+198.51.100.23 - - [28/Apr/2026:12:03:01 +0000] "GET /wp-login.php HTTP/1.1" 404 123 "-" "curl/8.0"
+Apr 28 12:04:01 lab sshd[1020]: Failed password for root from 8.8.8.8 port 50001 ssh2
+Apr 28 12:04:02 lab sshd[1021]: Failed password for root from 8.8.8.8 port 50002 ssh2
+Apr 28 12:04:03 lab sshd[1022]: Failed password for root from 8.8.8.8 port 50003 ssh2
+8.8.8.8 - - [28/Apr/2026:12:05:00 +0000] "GET /admin HTTP/1.1" 404 123 "-" "curl/8.0"

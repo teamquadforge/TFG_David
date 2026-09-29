@@ -1,0 +1,14 @@
+title: Fitxer hosts modificat
+id: mini-siem-fim-hosts-modified
+status: experimental
+severity: critical
+mitre: T1565 Data Manipulation
+logsource:
+  product: windows
+  service: fim
+condition:
+  event_action: fim_hosts_file_changed
+response:
+  - revisar diff o hash del fitxer
+  - comprovar procés i usuari associats
+  - restaurar si el canvi no és legítim

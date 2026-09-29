@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mini-SIEM Sentinel v15.4 · SOC personal</title>
+<style>
+:root{--bg:#f6f8fb;--panel:#fff;--panel2:#fbfcff;--ink:#172033;--muted:#65758b;--line:#dfe7f2;--brand:#2557d6;--brand2:#0f766e;--danger:#b42318;--warn:#b45309;--ok:#047857;--soft:#eef4ff;--shadow:0 18px 45px rgba(18,33,64,.08);--radius:20px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}.title h2{margin:0;font-size:22px;letter-spacing:-.03em}.title p{margin:4px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:10px;align-items:center}.pill{padding:8px 13px;border-radius:999px;background:#ecfdf5;color:#047857;border:1px solid #bbf7d0;font-size:12px;font-weight:850}.app{display:grid;grid-template-columns:286px 1fr;min-height:calc(100vh - 72px)}.sidebar{background:#fff;border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:72px;height:calc(100vh - 72px);overflow:auto}.brand{display:flex;gap:12px;align-items:center;margin-bottom:22px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#1d4ed8,#0f766e);display:grid;place-items:center;color:white;font-size:22px;box-shadow:0 12px 25px rgba(37,87,214,.22)}.brand h1{font-size:19px;margin:0;line-height:1}.brand span{font-size:12px;color:var(--muted);font-weight:800}.profile{border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);border-radius:18px;padding:16px;margin-bottom:18px}.profile b{display:block}.profile small{color:var(--muted)}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#334155;text-align:left;padding:11px 12px;border-radius:12px;font-weight:800}.nav button:hover{background:#f2f6fb}.nav button.active{background:#e9f0ff;color:var(--brand)}.content{padding:24px 28px 130px;min-width:0}.grid{display:grid;gap:18px}.kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:20px}.kpi,.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.kpi{padding:16px 18px}.kpi span{display:block;color:var(--muted);font-size:13px}.kpi b{display:block;margin-top:4px;font-size:32px;letter-spacing:-.04em}.card{padding:22px}.card h3{margin:0 0 14px;font-size:20px;letter-spacing:-.03em}.card h4{margin:16px 0 10px}.muted{color:var(--muted)}.cols2{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:repeat(3,1fr)}.section{display:none}.section.active{display:block}.btn{border:0;border-radius:13px;padding:10px 14px;background:var(--brand);color:white;font-weight:850;box-shadow:0 8px 18px rgba(37,87,214,.15)}.btn.secondary{background:#fff;color:#334155;border:1px solid var(--line);box-shadow:none}.btn.good{background:#0f766e}.btn.warn{background:#b45309}.btn.bad{background:#be123c}.btn.small{font-size:13px;padding:7px 10px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px}input,select,textarea{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 4px rgba(37,87,214,.1)}table{width:100%;border-collapse:collapse}th,td{padding:11px 10px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}th{font-size:12px;letter-spacing:.05em;color:#64748b;text-transform:uppercase}td{font-size:14px}.raw{font-family:Consolas,monospace;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:8px;max-height:100px;overflow:auto;white-space:pre-wrap;color:#243244}.badge{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:900;text-transform:uppercase}.critical{background:#fee2e2;color:#991b1b}.high{background:#ffedd5;color:#9a3412}.medium{background:#dbeafe;color:#1e40af}.low{background:#ccfbf1;color:#115e59}.info{background:#e2e8f0;color:#334155}.open{background:#fee2e2;color:#991b1b}.acknowledged{background:#fef3c7;color:#92400e}.closed{background:#dcfce7;color:#166534}.false_positive{background:#e2e8f0;color:#475569}.chart{height:260px;display:flex;gap:12px;align-items:flex-end;background:#f8fafc;border:1px solid #e8eef7;border-radius:16px;padding:22px 14px 32px}.bar{flex:1;border-radius:12px 12px 5px 5px;background:linear-gradient(180deg,#2f80ed,#2557d6);min-height:5px;position:relative}.bar b{position:absolute;top:-26px;left:50%;transform:translateX(-50%)}.bar span{position:absolute;bottom:-27px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted)}.linebox{height:260px;background:#f8fafc;border:1px solid #e8eef7;border-radius:16px;padding:12px}.empty{padding:26px;text-align:center;color:var(--muted)}.risk{display:flex;align-items:center;gap:10px}.meter{height:8px;width:130px;background:#e2e8f0;border-radius:999px;overflow:hidden}.meter i{display:block;height:100%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444)}.ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#10b981 calc(var(--p)*1%),#e2e8f0 0);position:relative;margin:auto}.ring:after{content:"";position:absolute;inset:16px;border-radius:50%;background:#fff}.ring b{position:relative;z-index:1;font-size:30px}.explain{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:14px;margin-top:12px;line-height:1.5}.miniCards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--panel2)}.check{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #edf2f7;padding:10px 0}.check:last-child{border-bottom:0}.ok{color:#047857;font-weight:900}.badtext{color:#b42318;font-weight:900}.timeline{border-left:3px solid #dbeafe;padding-left:16px}.tl{position:relative;margin:0 0 14px}.tl:before{content:"";position:absolute;left:-24px;top:4px;width:13px;height:13px;border-radius:50%;background:#2557d6}.copilot{position:fixed;right:22px;bottom:20px;width:470px;max-width:calc(100vw - 34px);z-index:90}.copilot.expanded{width:min(780px,calc(100vw - 34px))}.copilot.collapsed .copilotBody{display:none}.copilot.collapsed{width:340px}.copilotPanel{background:#fff;border:1px solid #d6e0ee;border-radius:22px;box-shadow:0 24px 70px rgba(15,23,42,.18);overflow:hidden}.copilotHead{display:flex;align-items:center;justify-content:space-between;background:#14213d;color:white;padding:13px 15px}.copilotTitle{display:flex;align-items:center;gap:10px}.avatar{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#e8f0ff;color:#1d4ed8}.copilotTitle small{display:block;color:#cbd5e1;font-size:11px}.iconBtn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:white;border-radius:10px;padding:7px 9px;font-weight:900}.context{padding:10px 14px;background:#fff;border-bottom:1px solid #e2e8f0;color:#475569;font-size:12px}.chatMessages{height:330px;overflow:auto;padding:14px;background:#f8fafc;display:flex;flex-direction:column;gap:10px}.copilot.expanded .chatMessages{height:520px}.bubble{max-width:93%;padding:11px 13px;border-radius:16px;line-height:1.45}.bubble.ai{align-self:flex-start;background:#fff;border:1px solid #e2e8f0}.bubble.user{align-self:flex-end;background:#1d4ed8;color:#fff}.chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 10px;background:#f8fafc}.chip{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;color:#334155}.composer{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 14px 14px;background:#fff;border-top:1px solid #e2e8f0}.composer textarea{min-height:44px;resize:vertical}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:none;background:#0f172a;color:#fff;padding:12px 16px;border-radius:999px;z-index:120}.modal{position:fixed;inset:0;background:rgba(15,23,42,.38);display:none;place-items:center;z-index:100}.modalBox{background:#fff;border:1px solid var(--line);border-radius:24px;width:min(920px,calc(100vw - 34px));max-height:86vh;overflow:auto;box-shadow:0 30px 90px rgba(15,23,42,.25);padding:24px}@media(max-width:1200px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0}.nav{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(3,1fr)}.cols2,.cols3{grid-template-columns:1fr}.content{padding-bottom:30px}.copilot{position:static;width:auto;margin:20px}}@media(max-width:760px){.kpis,.nav,.miniCards{grid-template-columns:1fr}.topbar{height:auto;padding:14px;align-items:flex-start;flex-direction:column}.actions{flex-wrap:wrap}.content{padding:14px}}
+
+/* ===== v15.3: taules EDR, hashes i rutes llargues ===== */
+.card{overflow:hidden}
+#edr .grid.cols2{grid-template-columns:minmax(360px,.85fr) minmax(0,1.15fr);align-items:start}
+#edr table{table-layout:fixed;width:100%;min-width:760px}
+#edr th,#edr td{overflow-wrap:anywhere;word-break:break-word;white-space:normal}
+#edr th:nth-child(1),#edr td:nth-child(1){width:115px}
+#edr th:nth-child(2),#edr td:nth-child(2){width:130px}
+#edr th:nth-child(5),#edr td:nth-child(5){width:150px}
+#quarantineTable,#edrActionsTable{width:100%;max-width:100%;overflow-x:auto}
+#quarantineTable .raw,#edrActionsTable .raw{max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-all}
+.pathCell,.hashCell{display:inline-block;max-width:100%;padding:7px 9px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;font-family:Consolas,monospace;font-size:12px;line-height:1.35;overflow-wrap:anywhere;word-break:break-all}.hashCell{color:#334155}@media(max-width:1200px){#edr .grid.cols2{grid-template-columns:1fr}#edr table{min-width:680px}}
+/* HOTFIX v15.3 - Taules amples amb scroll horitzontal */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+}
+
+.table-scroll table {
+  min-width: 980px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: #eef2f7;
+  border-radius: 999px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Cel·la Threat Intel */
+.intel-cell {
+  min-width: 170px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  white-space: normal;
+}
+
+.btn-small {
+  border: 1px solid #dbe3ef;
+  background: #ffffff;
+  color: #0f172a;
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, .06);
+}
+
+.btn-small:hover {
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.pill.good {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pill.warn {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pill.bad {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.pill.muted {
+  background: #eef2f7;
+  color: #64748b;
+}
+
+.small {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+
+/* ===== HOTFIX FINAL XARXA + AbuseIPDB v15.3 ===== */
+#network .card {
+  overflow: hidden;
+}
+
+.network-card-scroll {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
+  margin-top: 8px;
+}
+
+.network-card-scroll table {
+  width: max-content;
+  min-width: 1180px;
+  border-collapse: collapse;
+}
+
+.network-card-scroll th,
+.network-card-scroll td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.network-card-scroll::-webkit-scrollbar {
+  height: 12px;
+}
+
+.network-card-scroll::-webkit-scrollbar-track {
+  background: #edf2f7;
+  border-radius: 999px;
+}
+
+.network-card-scroll::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 999px;
+}
+
+.network-card-scroll::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.ti-cell {
+  min-width: 210px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  white-space: normal;
+}
+
+.ti-btn {
+  width: fit-content;
+  border: 1px solid #d7e2f0;
+  background: #ffffff;
+  color: #172033;
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, .06);
+}
+
+.ti-btn:hover {
+  border-color: #2557d6;
+  color: #2557d6;
+}
+
+.ti-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.ti-pill.good { background: #dcfce7; color: #166534; }
+.ti-pill.warn { background: #fef3c7; color: #92400e; }
+.ti-pill.bad { background: #fee2e2; color: #991b1b; }
+.ti-pill.muted { background: #eef2f7; color: #64748b; }
+.ti-small { font-size: 12px; line-height: 1.35; color: #64748b; }
+
+
+/* HOTFIX v15.4 - CSV filtrat i quarantena segura */
+.csv-note { margin-top: 10px; font-size: 13px; color: #64748b; }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="title"><h2>Centre d'operacions personal</h2><p>Monitoratge real de Windows, Linux, Docker, descàrregues i integritat</p></div><div class="actions"><span class="pill">EN VIU</span><button class="btn" onclick="loadAll()">Actualitzar</button><button class="btn secondary" onclick="location.href='/landing.html'">Web</button><button class="btn bad" onclick="logout()">Sortir</button></div></div>
+<div class="app"><aside class="sidebar"><div class="brand"><div class="logo">🛡</div><div><h1>Mini-SIEM Sentinel</h1><span>v15.4 · SOC personal</span></div></div><div class="profile"><b id="userBox">Analista</b><small>Entorn defensiu local</small></div><nav class="nav" id="nav"></nav></aside><main class="content"><div class="kpis grid" id="kpis"></div>
+<section id="overview" class="section active"><div class="grid cols2"><div class="card"><h3>Alertes per severitat</h3><p class="muted">Aquest gràfic compta alertes. Els esdeveniments informatius pugen a Esdeveniments, no aquí.</p><div class="chart" id="sevChart"></div></div><div class="card"><h3>Activitat de l'última hora</h3><div class="linebox" id="timelineChart"></div></div><div class="card"><h3>Top IPs</h3><div id="topIps"></div></div><div class="card"><h3>Salut del SIEM</h3><div id="healthBox"></div></div></div></section>
+<section id="alerts" class="section"><div class="card"><h3>Cola d'alertes SOC</h3><p class="muted">Selecciona una alerta per veure explicació, evidències, MITRE i passos recomanats.</p><div class="toolbar"><select id="alertStatus"><option value="">Tots els estats</option><option value="open">Oberta</option><option value="acknowledged">Reconeguda</option><option value="closed">Tancada</option><option value="false_positive">Fals positiu</option></select><button class="btn" onclick="loadAlerts()">Filtrar</button></div><div id="alertsTable"></div><div id="alertExplain" class="explain"></div></div></section>
+<section id="events" class="section"><div class="card"><h3>Esdeveniments normalitzats</h3><p class="muted">Vista filtrada per defecte: risc mitjà/alt, Defender, PowerShell, FIM i Download Guard.</p><div class="toolbar"><input id="eventIp" placeholder="IP exacta"><select id="eventSeverity"><option value="">Severitat</option><option>critical</option><option>high</option><option>medium</option><option>low</option><option>info</option></select><select id="eventService"><option value="">Servei</option><option>windows</option><option>download_guard</option><option>fim</option><option>powershell</option><option>windows_defender</option><option>sysmon</option><option>ssh</option><option>nginx</option></select><label class="muted"><input type="checkbox" id="interestingOnly" checked> Només rellevants</label><button class="btn" onclick="loadEvents()">Filtrar</button><button class="btn secondary" onclick="exportCSV()">Exportar CSV</button></div><div id="eventsTable"></div><div id="eventExplain" class="explain"></div></div></section>
+<section id="agents" class="section"><div class="grid cols2"><div class="card"><h3>Agents instal·lats</h3><div id="agentsTable"></div></div><div class="card"><h3>Windows</h3><div id="windowsSummary"></div></div><div class="card"><h3>Download Guard</h3><p class="muted">Inspecciona Descàrregues, ZIPs, hashes SHA256, doble extensió, scripts, macros i executables.</p><a class="btn good" href="/downloads/MiniSIEMAgent-Windows-v15_3-INSTALADOR.zip">Descarregar agent Windows</a></div><div class="card"><h3>Limitació honesta</h3><p class="muted">El sistema alerta i ajuda a prevenir execució accidental, però el bloqueig total requereix AppLocker, WDAC o integració profunda amb Defender.</p></div></div></section>
+
+<section id="network" class="section"><div class="grid cols2"><div class="card"><h3>Telemetria de xarxa domèstica</h3><p class="muted">Recol·lector Syslog UDP per router/firewall. Port per defecte: <b>5514/udp</b>. Permet veure DHCP, firewall, DNS, login del router i activitat de dispositius IoT com Smart TV.</p><div class="toolbar"><button class="btn" onclick="loadNetwork()">Actualitzar</button><button class="btn secondary" onclick="demoNetwork()">Generar demo de xarxa</button></div><div id="networkEvents"></div></div><div class="card"><h3>Dispositius detectats</h3><div id="networkDevices"></div></div><div class="card"><h3>Com provar amb el router</h3><ol class="muted"><li>Activa syslog remot al router.</li><li>Servidor: IP del PC on corre Docker.</li><li>Port: 5514 UDP.</li><li>Genera trànsit: connecta una TV/mòbil, intenta login al router o activa logs firewall.</li></ol></div><div class="card"><h3>Threat intelligence</h3><p class="muted">Si configures <code>ABUSEIPDB_API_KEY</code>, les IPs públiques de la xarxa es contrasten amb AbuseIPDB. Els hashes de descàrregues es poden consultar amb VirusTotal si configures <code>VIRUSTOTAL_API_KEY</code>.</p><div id="tiStatus"></div></div></div></section>
+<section id="posture" class="section"><div class="card"><h3>Postura de seguretat del dispositiu</h3><p class="muted">Comprova controls preventius reals del Windows monitoritzat.</p><div id="postureBox"></div></div></section>
+<section id="fim" class="section"><div class="card"><h3>Integritat de fitxers i descàrregues</h3><p class="muted">Canvis en hosts, Startup, Desktop, Documents i Descàrregues.</p><div id="fimTable"></div></div></section>
+<section id="hunting" class="section"><div class="card"><h3>Threat Hunting segur</h3><p class="muted">La consulta natural genera filtres allowlist, no SQL lliure.</p><div class="toolbar"><input id="nlq" style="min-width:420px" value="mostra alertes high de Windows última hora"><button class="btn" onclick="runNL()">Cercar</button><button class="btn secondary" onclick="loadAISuggestions()">Suggeriments</button></div><div id="nlSql" class="muted"></div><div id="aiSuggestions" class="explain" style="display:none"></div><div id="nlResults"></div></div></section>
+<section id="cases" class="section"><div class="card"><h3>Incidents</h3><div class="toolbar"><input id="caseTitle" placeholder="Títol de l'incident"><select id="caseSeverity"><option>medium</option><option>high</option><option>critical</option><option>low</option></select><button class="btn" onclick="createCase()">Crear incident</button></div><div id="casesTable"></div><div id="caseTimeline" class="explain"></div></div></section>
+<section id="demo" class="section"><div class="card"><h3>Mode demo TFG</h3><p class="muted">Genera escenaris segurs, sense malware real ni canvis perillosos al teu PC. Serveix per defensar el pipeline: event → regla → alerta → incident → auditoria.</p><div class="miniCards"><div class="mini"><b>Defender crític</b><p class="muted">Simula detecció de malware.</p><button class="btn bad" onclick="demo('critical-defender')">Generar critical</button></div><div class="mini"><b>PowerShell sospitós</b><p class="muted">Simula EncodedCommand/IEX.</p><button class="btn warn" onclick="demo('suspicious-powershell')">Generar high</button></div><div class="mini"><b>ZIP perillós</b><p class="muted">Simula factura.zip amb scripts.</p><button class="btn warn" onclick="demo('dangerous-download')">Generar Download Guard</button></div><div class="mini"><b>Hosts modificat</b><p class="muted">Simula canvi de fitxer sensible.</p><button class="btn bad" onclick="demo('fim-hosts-change')">Generar FIM</button></div><div class="mini"><b>Incident complet</b><p class="muted">Descàrrega → PowerShell → servei.</p><button class="btn good" onclick="demo('full-incident')">Generar història completa</button></div><div class="mini"><b>Neteja demo</b><p class="muted">Elimina dades demo generades.</p><button class="btn secondary" onclick="demo('clear')">Netejar</button></div></div><div id="demoResult" class="explain"></div></div></section>
+<section id="ioc" class="section"><div class="grid cols2"><div class="card"><h3>Consulta IOC</h3><div class="toolbar"><input id="iocValue" placeholder="IP, hash, domini o indicador"><button class="btn" onclick="lookupIOC()">Analitzar</button></div><div id="iocResult" class="explain"></div></div><div class="card"><h3>Watchlist local</h3><div class="toolbar"><input id="watchValue" placeholder="IOC"><select id="watchType"><option>ip</option><option>hash</option><option>domain</option><option>filename</option><option>user</option><option>process</option></select><input id="watchLabel" placeholder="Etiqueta"><select id="watchSeverity"><option>high</option><option>medium</option><option>critical</option></select><button class="btn" onclick="addWatch()">Afegir</button></div><div id="watchTable"></div></div></div></section>
+<section id="rules" class="section"><div class="card"><h3>Regles de detecció</h3><div id="rulesTable"></div></div></section>
+<section id="mitre" class="section"><div class="card"><h3>Cobertura MITRE ATT&CK</h3><p class="muted">Mapa de tècniques cobertes per les regles i alertes generades.</p><div id="mitreTable"></div></div></section>
+<section id="architecture" class="section"><div class="grid cols2"><div class="card"><h3>Arquitectura</h3><div id="archBox"></div></div><div class="card"><h3>Manual d'ús</h3><div id="manualBox"></div></div></div></section>
+<section id="settings" class="section"><div class="card"><h3>Configuració i retenció</h3><p class="muted">Control bàsic de retenció local de dades.</p><div class="toolbar"><input id="retEvents" type="number" min="1" value="30" placeholder="Dies events"><input id="retAudit" type="number" min="1" value="90" placeholder="Dies auditoria"><button class="btn" onclick="saveRetention()">Desar</button><button class="btn warn" onclick="cleanup()">Executar neteja</button></div><div id="settingsBox" class="explain"></div></div></section>
+<section id="edr" class="section"><div class="grid cols2"><div class="card"><h3>EDR lleuger i resposta controlada</h3><p class="muted">Accions defensives que no s'executen automàticament: l'analista les aprova i l'agent les executa localment.</p><div id="edrSummary" class="miniCards"></div><h4>Nova acció EDR</h4><div class="toolbar"><input id="edrHostname" placeholder="Hostname opcional"><input id="edrAgentId" placeholder="Agent ID opcional"><select id="edrActionType"><option value="quarantine_file">Moure fitxer a quarantena</option><option value="delete_file">Eliminar fitxer de forma segura</option></select><input id="edrTargetPath" placeholder="Ruta completa del fitxer"><input id="edrReason" placeholder="Motiu"><button class="btn" onclick="createEDRAction()">Enviar acció</button></div><p class="muted">Seguretat: l'agent rebutja rutes del sistema Windows. La quarantena conserva evidències i no s'esborra des de la taula.</p></div><div class="card"><h3>Quarantena</h3><div id="quarantineTable"></div></div></div><div class="card"><h3>Historial d'accions EDR</h3><div id="edrActionsTable"></div></div><div class="card"><h3>Fitxers detectats a Descàrregues</h3><div id="edrDownloadsTable"></div></div></section>
+<section id="notifications" class="section"><div class="grid cols2"><div class="card"><h3>Notificacions Telegram</h3><p class="muted">Envia avisos quan es creen alertes amb severitat mínima configurada. Recomanat: només critical.</p><div class="toolbar"><select id="telegramEnabled"><option value="false">Desactivat</option><option value="true">Activat</option></select><select id="telegramMinSeverity"><option value="critical">critical</option><option value="high">high + critical</option><option value="medium">medium + high + critical</option></select></div><input id="telegramToken" style="width:100%;margin-bottom:10px" placeholder="Bot token de Telegram"><input id="telegramChatId" style="width:100%;margin-bottom:10px" placeholder="Chat ID"><div class="toolbar"><button class="btn" onclick="saveTelegramSettings()">Desar</button><button class="btn secondary" onclick="sendTelegramTest()">Enviar prova</button></div><div id="telegramStatus" class="explain"></div></div><div class="card"><h3>Historial d'enviaments</h3><div id="notificationHistory"></div></div></div></section>
+<section id="playbooks" class="section"><div class="card"><h3>Playbooks de resposta</h3><div id="playbooksTable"></div></div></section>
+<section id="audit" class="section"><div class="card"><h3>Auditoria</h3><div id="auditTable"></div></div></section>
+</main></div>
+<div class="copilot" id="copilot"><div class="copilotPanel"><div class="copilotHead"><div class="copilotTitle"><div class="avatar">✦</div><div><b>Assistent SOC</b><small>Contextual · local · v15.4</small></div></div><div><button class="iconBtn" onclick="copilot.classList.toggle('expanded')">↗</button> <button class="iconBtn" onclick="copilot.classList.toggle('collapsed')">—</button></div></div><div class="copilotBody"><div class="context" id="aiContext">Context: visió general</div><div class="chatMessages" id="chatMessages"><div class="bubble ai"><b>Hola David.</b><br>Puc explicar la pàgina, valorar alertes, preparar la demo del TFG, justificar arquitectura, MITRE, Download Guard, FIM i postura de seguretat.</div></div><div class="chips"><button class="chip" onclick="askCopilot('Què fa aquesta pàgina?')">Què fa aquesta pàgina?</button><button class="chip" onclick="askCopilot('M’hauria de preocupar?')">M'hauria de preocupar?</button><button class="chip" onclick="askCopilot('Com faig la demo del TFG?')">Demo TFG</button><button class="chip" onclick="askCopilot('Explica l’arquitectura')">Arquitectura</button></div><div class="composer"><textarea id="aiQuestion" placeholder="Pregunta qualsevol cosa del projecte o del context seleccionat..."></textarea><button class="btn" onclick="askCopilot()">Enviar</button></div></div></div></div>
+<div id="toast" class="toast"></div><div class="modal" id="modal"><div class="modalBox"><h3 id="modalTitle"></h3><div id="modalBody"></div><div class="toolbar"><button class="btn secondary" onclick="modal.style.display='none'">Tancar</button></div></div></div>
+<script>
+const API=location.protocol+'//'+location.hostname+':8000';const token=localStorage.getItem('token');if(!token)location.href='/login.html';let current={page:'overview',alert_id:null,event_id:null};let state={labels:{}};const navItems=[['overview','Visió general'],['alerts','Alertes'],['events','Esdeveniments'],['agents','Agents'],['network','Xarxa'],['posture','Postura'],['fim','Integritat'],['hunting','Hunting'],['cases','Incidents'],['demo','Mode demo'],['ioc','IOC'],['rules','Regles'],['mitre','MITRE'],['architecture','Arquitectura'],['settings','Configuració'],['edr','EDR'],['notifications','Notificacions'],['playbooks','Playbooks'],['audit','Auditoria']];nav.innerHTML=navItems.map(([id,t])=>`<button onclick="show('${id}')" id="nav-${id}">${t}</button>`).join('');function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('nav-'+id).classList.add('active');current.page=id;setCtx('Context: '+navItems.find(x=>x[0]===id)[1]);loadSection(id)}show('overview');userBox.textContent=localStorage.getItem('username')||'david';function logout(){localStorage.clear();location.href='/login.html'}async function api(path,opt={}){const r=await fetch(API+path,{...opt,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token,...(opt.headers||{})}});if(!r.ok)throw new Error(await r.text());return r.json()}function esc(v){return (v??'-').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}function fmt(v){return v?new Date(v).toLocaleString('ca-ES'):'-'}function sev(s){return `<span class="badge ${esc(s)}">${esc(s)}</span>`}function st(s){
+  const raw=(s??'-').toString();
+  const key=raw.toLowerCase();
+  const labels={
+    'quarantined':'En quarantena',
+    'delete_requested':'En quarantena',
+    'pending_delete':'En quarantena',
+    'delete_failed':'En quarantena',
+    'blocked':'Protegit',
+    'completed':'Completada',
+    'failed':'Fallida',
+    'pending':'Pendent',
+    'open':'Oberta',
+    'acknowledged':'Reconeguda',
+    'closed':'Tancada',
+    'false_positive':'Fals positiu',
+    'deleted':'Eliminat'
+  };
+  const label=labels[key]||raw;
+  return `<span class="badge ${esc(key)}">${esc(label)}</span>`;
+}function table(h,rows){return `<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${h.length}" class="empty">Sense dades</td></tr>`}</tbody></table>`}function toast(t){toastEl=document.getElementById('toast');toastEl.textContent=t;toastEl.style.display='block';setTimeout(()=>toastEl.style.display='none',2600)}function risk(v){v=Number(v||0);return `<div class="risk"><b>${v}</b><span class="meter"><i style="width:${Math.min(100,v)}%"></i></span></div>`}function human(a){return state.labels[a]||a||'-'}
+async function loadAll(){try{state.labels=await api('/human/action-labels')}catch{};await Promise.allSettled([loadStats(),loadHealth(),loadSection(current.page)])}async function loadSection(id){if(id==='alerts')return loadAlerts();if(id==='events')return loadEvents();if(id==='agents')return loadAgents();if(id==='network')return loadNetwork();if(id==='posture')return loadPosture();if(id==='fim')return loadFIM();if(id==='cases')return loadCases();if(id==='ioc')return Promise.all([loadWatch()]);if(id==='rules')return loadRules();if(id==='mitre')return loadMitre();if(id==='architecture')return Promise.all([loadArchitecture(),loadManual()]);if(id==='settings')return loadRetention();if(id==='edr')return loadEDR();if(id==='notifications')return loadNotifications();if(id==='playbooks')return loadPlaybooks();if(id==='audit')return loadAudit();}
+async function loadStats(){const s=await api('/stats');kpis.innerHTML=[['Esdeveniments',s.total_events],['Última hora',s.events_last_hour],['Alertes',s.total_alerts],['Obertes',s.open_alerts],['High/Critical',s.high_open_alerts],['Top IP',(s.top_ips?.[0]?.src_ip)||'-']].map(x=>`<div class="kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');const order=['critical','high','medium','low','info'];const map=Object.fromEntries((s.alerts_by_severity||[]).map(x=>[x.severity,Number(x.count)]));const max=Math.max(1,...Object.values(map));sevChart.innerHTML=order.map(k=>`<div class="bar" style="height:${(map[k]||0)/max*92+4}%"><b>${map[k]||0}</b><span>${k}</span></div>`).join('');topIps.innerHTML=table(['IP','Events'],(s.top_ips||[]).map(x=>[esc(x.src_ip),x.count]));renderLine(s.timeline||[])}function renderLine(rows){if(!rows.length){timelineChart.innerHTML='<div class="empty">Sense activitat recent</div>';return}const w=720,h=230,p=25,vals=rows.map(r=>Number(r.count)),max=Math.max(1,...vals),pts=rows.map((r,i)=>[p+(i/(rows.length-1||1))*(w-p*2),h-p-(Number(r.count)/max)*(h-p*2)]);timelineChart.innerHTML=`<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%"><polyline fill="none" stroke="#2557d6" stroke-width="4" points="${pts.map(p=>p.join(',')).join(' ')}"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#0f766e"><title>${vals[i]}</title></circle>`).join('')}</svg>`}async function loadHealth(){try{const h=await api('/dashboard/health');healthBox.innerHTML=`<div class="ring" style="--p:${h.health_score}"><b>${h.health_score}%</b></div><p class="muted">Events 10m: ${h.recent_events_10m} · Crítiques obertes: ${h.critical_open} · Incidents oberts: ${h.open_cases}</p>`}catch{healthBox.innerHTML='<div class="empty">Sense dades</div>'}}
+async function loadAlerts(){let q=alertStatus?.value?`?status=${alertStatus.value}`:'';state.alerts=await api('/alerts'+q);alertsTable.innerHTML=table(['Hora','Regla','Sev','Estat','Risc','IP','Descripció','MITRE','Acció'],state.alerts.map(a=>[fmt(a.alert_time),esc(a.rule_name),sev(a.severity),st(a.status),risk(a.risk_score),esc(a.src_ip),esc(a.description),esc(a.mitre_technique),`<button class="btn small secondary" onclick="selectAlert(${a.id})">Detall</button> <button class="btn small warn" onclick="updAlert(${a.id},'acknowledged')">Ack</button> <button class="btn small good" onclick="updAlert(${a.id},'closed')">Tancar</button>`]));}
+async function selectAlert(id){current.alert_id=id;current.event_id=null;setCtx('Context: alerta #'+id);const ex=await api('/alerts/'+id+'/explain');alertExplain.innerHTML=`<h4>${esc(ex.title)}</h4><p>${esc(ex.summary)}</p><p><b>Preocupació:</b> ${ex.should_worry?'Sí, cal investigar.':'No és crítica, però revisa context.'}</p><b>Per què:</b><ul>${ex.why.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><b>Passos recomanats:</b><ol>${ex.recommended_steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><button class="btn secondary" onclick="askCopilot('M’hauria de preocupar aquesta alerta? Explica-m’ho amb passos.')">Preguntar a l’assistent</button>`;askCopilot('He seleccionat una alerta. Resumeix-me si és greu i què faig.')}async function updAlert(id,status){await api('/alerts/'+id,{method:'PATCH',body:JSON.stringify({status,note:'Actualitzat des del dashboard v15'})});toast('Alerta actualitzada');loadAlerts();loadStats()}
+function buildEventQuery(limit=100){
+  const p=new URLSearchParams();
+  p.set('limit', String(limit));
+  if(eventIp.value.trim()) p.set('src_ip', eventIp.value.trim());
+  if(eventSeverity.value) p.set('severity', eventSeverity.value);
+  if(eventService.value) p.set('service', eventService.value);
+  if(interestingOnly.checked) p.set('interesting','true');
+  return p;
+}
+async function loadEvents(){
+  const p=buildEventQuery(100);
+  state.events=await api('/events?'+p.toString());
+  eventsTable.innerHTML=table(['Hora','Font','Acció humana','Sev','Risc','IP','Usuari','Servei','Raw','Acció'],state.events.map(e=>[fmt(e.event_time),esc(e.source_name||e.source_type),esc(human(e.event_action)),sev(e.severity),risk(e.risk_score_base),esc(e.src_ip),esc(e.user_name),esc(e.service),`<div class="raw">${esc(e.raw_log||e.message)}</div>`,`<button class="btn small secondary" onclick="selectEvent(${e.id})">Explicar</button>`]));
+}
+async function selectEvent(id){current.event_id=id;current.alert_id=null;setCtx('Context: esdeveniment #'+id);const ex=await api('/events/'+id+'/explain');eventExplain.innerHTML=`<h4>${esc(ex.title)}</h4><p>${esc(ex.summary)}</p><b>Per què importa:</b><ul>${ex.why.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><b>Passos:</b><ol>${ex.recommended_steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;askCopilot('Analitza l’esdeveniment seleccionat i digues si m’hauria de preocupar.')}
+async function exportCSV(){
+  const p=buildEventQuery(5000);
+  const url=API+'/export/events.csv?'+p.toString();
+  const r=await fetch(url,{headers:{Authorization:'Bearer '+token}});
+  if(!r.ok){toast('Error exportant CSV');throw new Error(await r.text());}
+  const b=await r.blob();
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a');
+  const parts=['mini-siem-events'];
+  if(eventSeverity.value) parts.push(eventSeverity.value);
+  if(eventService.value) parts.push(eventService.value);
+  if(eventIp.value.trim()) parts.push(eventIp.value.trim().replace(/[^a-zA-Z0-9_.-]/g,'_'));
+  if(interestingOnly.checked) parts.push('rellevants');
+  a.href=u;
+  a.download=parts.join('_')+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(u);
+  toast('CSV exportat amb els filtres actuals');
+}
+async function loadAgents(){const a=await api('/agents');agentsTable.innerHTML=table(['Host','SO','Versió','Estat','Últim heartbeat'],a.map(x=>[esc(x.hostname),esc(x.os_type+' '+(x.os_version||'')),esc(x.version),x.online?'<b class="ok">EN LÍNIA</b>':'<b class="badtext">SENSE CONNEXIÓ</b>',fmt(x.last_seen)]));const w=await api('/windows/summary');windowsSummary.innerHTML=`<div class="miniCards"><div class="mini"><span>Events Windows</span><h2>${w.total_windows_events}</h2></div><div class="mini"><span>Última hora</span><h2>${w.windows_events_last_hour}</h2></div></div><h4>Accions principals</h4>${table(['Acció','Events'],(w.top_windows_actions||[]).map(x=>[esc(human(x.event_action)),x.count]))}`}async function loadPosture(){const p=await api('/device-posture');postureBox.innerHTML=p.length?p.map(x=>`<div class="card" style="box-shadow:none;margin-bottom:14px"><h4>${esc(x.agent.hostname)} · ${x.score}%</h4><div class="ring" style="--p:${x.score}"><b>${x.score}%</b></div>${x.checks.map(c=>`<div class="check"><div><b>${esc(c.name)}</b><br><small class="muted">${esc(c.detail)}</small></div><span class="${c.ok?'ok':'badtext'}">${c.ok?'OK':'Revisar'}</span></div>`).join('')}</div>`).join(''):'<div class="empty">Encara no hi ha postura. Instal·la o reinicia l’agent v15.</div>'}async function loadFIM(){const f=await api('/fim/observations');fimTable.innerHTML=table(['Hora','Host','Acció','Sev','Risc','Usuari','Raw'],f.map(e=>[fmt(e.event_time),esc(e.source_name),esc(human(e.event_action)),sev(e.severity),risk(e.risk_score_base),esc(e.user_name),`<div class="raw">${esc(e.raw_log)}</div>`]))}
+async function runNL(){const r=await api('/nl-query',{method:'POST',body:JSON.stringify({query:nlq.value,limit:100})});nlSql.textContent='Consulta segura: '+r.sql_preview;nlResults.innerHTML=table(['Hora','Acció','Sev','IP','Usuari','Raw'],(r.results||[]).map(e=>[fmt(e.event_time),esc(human(e.event_action)),sev(e.severity),esc(e.src_ip),esc(e.user_name),`<div class="raw">${esc(e.raw_log||e.message)}</div>`]))}async function loadAISuggestions(){const r=await api('/ai/hunt-suggestions');aiSuggestions.style.display='block';aiSuggestions.innerHTML='<b>Suggeriments:</b><ul>'+r.suggestions.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>'}
+async function loadCases(){state.cases=await api('/cases');casesTable.innerHTML=table(['ID','Títol','Sev','Estat','Owner','Alertes','Acció'],state.cases.map(c=>[c.id,esc(c.title),sev(c.severity),st(c.status),esc(c.owner),c.alerts,`<button class="btn small secondary" onclick="caseTl(${c.id})">Timeline</button> <button class="btn small good" onclick="closeCase(${c.id})">Tancar</button>`]))}async function createCase(){await api('/cases',{method:'POST',body:JSON.stringify({title:caseTitle.value,description:'Incident creat des del SOC v15',severity:caseSeverity.value})});caseTitle.value='';loadCases()}async function closeCase(id){await api('/cases/'+id,{method:'PATCH',body:JSON.stringify({status:'closed'})});loadCases()}async function caseTl(id){const r=await api('/cases/'+id+'/timeline');caseTimeline.innerHTML=`<h4>${esc(r.case.title)}</h4><div class="timeline">${r.timeline.map(x=>`<div class="tl"><b>${fmt(x.time)} · ${esc(x.title)}</b><br>${sev(x.severity)} ${esc(x.description)}<br><small>${esc(x.mitre)}</small></div>`).join('')||'Sense alertes vinculades'}</div>`}
+async function demo(kind){const r=await api('/demo/'+kind,{method:'POST',body:'{}'});demoResult.innerHTML='<b>Resultat:</b><pre class="raw">'+esc(JSON.stringify(r,null,2))+'</pre>';toast('Demo executada');loadAll()}async function lookupIOC(){const r=await api('/ioc/lookup?value='+encodeURIComponent(iocValue.value));iocResult.innerHTML=`<b>${esc(r.value)}</b><br>Context: ${esc(r.context?.scope||'unknown')} / ${esc(r.context?.label||'')}<br>Esdeveniments vistos: ${r.seen_events}<br>Alertes vistes: ${r.seen_alerts}<br>Watchlist: ${r.watchlist?esc(r.watchlist.label):'no'}`}async function loadWatch(){const w=await api('/watchlist');watchTable.innerHTML=table(['IOC','Tipus','Etiqueta','Sev','Acció'],w.map(x=>[esc(x.value),esc(x.ioc_type),esc(x.label),sev(x.severity),`<button class="btn small bad" onclick="delWatch(${x.id})">Desactivar</button>`]))}async function addWatch(){await api('/watchlist',{method:'POST',body:JSON.stringify({value:watchValue.value,ioc_type:watchType.value,label:watchLabel.value,severity:watchSeverity.value})});watchValue.value='';watchLabel.value='';loadWatch()}async function delWatch(id){await api('/watchlist/'+id,{method:'DELETE'});loadWatch()}
+async function loadRules(){const r=await api('/rules');rulesTable.innerHTML=table(['Regla','Sev','Risc','MITRE','Activa','Descripció','Acció'],r.map(x=>[esc(x.rule_name),sev(x.severity),x.risk_score,esc(x.mitre_technique),x.enabled?'✅':'⛔',esc(x.description),`<button class="btn small secondary" onclick="toggleRule(${x.id},${!x.enabled})">${x.enabled?'Desactivar':'Activar'}</button>`]))}async function toggleRule(id,en){await api('/rules/'+id,{method:'PATCH',body:JSON.stringify({enabled:en})});loadRules()}async function loadMitre(){const m=await api('/mitre/coverage');mitreTable.innerHTML=table(['Tàctica','Tècnica','Regles','Alertes'],m.map(x=>[esc(x.mitre_tactic),esc(x.mitre_technique),x.rules,x.alerts]))}async function loadArchitecture(){const a=await api('/architecture');archBox.innerHTML='<ol>'+a.flow.map(x=>`<li>${esc(x)}</li>`).join('')+'</ol><h4>Seguretat per disseny</h4><ul>'+a.security.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>'}async function loadManual(){const m=await api('/manual');manualBox.innerHTML=m.steps.map(s=>`<div class="check"><div><b>${esc(s.title)}</b><br><small class="muted">${esc(s.body)}</small></div></div>`).join('')}async function loadRetention(){const r=await api('/settings/retention');retEvents.value=r.retention_events_days||30;retAudit.value=r.retention_audit_days||90;settingsBox.innerHTML='Retenció actual carregada.'}async function saveRetention(){await api('/settings/retention',{method:'POST',body:JSON.stringify({events_days:Number(retEvents.value),audit_days:Number(retAudit.value)})});toast('Retenció desada')}async function cleanup(){const r=await api('/settings/cleanup',{method:'POST',body:'{}'});settingsBox.innerHTML='<pre class="raw">'+esc(JSON.stringify(r,null,2))+'</pre>'}function compactPath(v){v=v||'-';const safe=esc(v);return `<span class="pathCell" title="${safe}">${safe}</span>`}function compactHash(v){v=v||'-';const safe=esc(v);let shown=safe;if(safe.length>28)shown=safe.slice(0,14)+'…'+safe.slice(-10);return `<span class="hashCell" title="${safe}">${shown}</span>`}
+async function loadEDR(){
+  const s=await api('/edr/summary');
+  edrSummary.innerHTML=`<div class="mini"><span>Events de risc</span><h2>${s.risky_events}</h2></div><div class="mini"><span>Fitxers en quarantena</span><h2>${s.quarantined_files}</h2></div><div class="mini"><span>Accions pendents</span><h2>${s.pending_actions}</h2></div>`;
+  const actions=await api('/edr/actions');
+  edrActionsTable.innerHTML=table(['Hora','Acció','Estat','Host','Ruta','Resultat'],actions.map(a=>[fmt(a.created_at),esc(a.action_type),st(a.status),esc(a.hostname||a.agent_id),`<div class="raw">${esc(a.target_path)}</div>`,esc(a.result||'')]));
+  const q=await api('/edr/quarantine');
+  quarantineTable.innerHTML=table(['Hora','Host','Ruta original','SHA256','Estat'],q.map(x=>[fmt(x.created_at),esc(x.hostname),compactPath(x.original_path),compactHash(x.sha256),st(x.status||'quarantined')]));
+  try{
+    const d=await api('/edr/downloads');
+    edrDownloadsTable.innerHTML=table(['Hora','Host','Acció','Sev','Risc','Fitxer/Hash'],d.map(e=>{
+      const m=e.metadata||{};
+      const ed=m.event_data||{};
+      const ti=(m.threat_intel||{}).virustotal||{};
+      return [fmt(e.event_time),esc(e.source_name),esc(human(e.event_action)),sev(e.severity),risk(e.risk_score_base),`<div class="raw">${esc(ed.path||ed.file_name||e.raw_log)}
+SHA256: ${esc(ed.sha256||'-')}
+VT: ${esc(ti.summary||'-')}</div>`]
+    }));
+  }catch(e){}
+}
+async function createEDRAction(){
+  if(!edrTargetPath.value.trim()){
+    toast('Indica una ruta de fitxer');
+    return;
+  }
+  const body={hostname:edrHostname.value||null,agent_id:edrAgentId.value||null,action_type:edrActionType.value,target_path:edrTargetPath.value,reason:edrReason.value||'Acció manual EDR des del SOC'};
+  const r=await api('/edr/actions',{method:'POST',body:JSON.stringify(body)});
+  toast('Acció EDR en cua #'+r.action_id);
+  loadEDR();
+}
+async function loadNotifications(){const cfg=await api('/notifications/settings');telegramEnabled.value=String(cfg.telegram_enabled);telegramMinSeverity.value=cfg.telegram_min_severity||'critical';telegramChatId.value=cfg.telegram_chat_id||'';telegramToken.placeholder=cfg.telegram_bot_token_masked?('Token actual: '+cfg.telegram_bot_token_masked):'Bot token de Telegram';telegramStatus.innerHTML=`Estat: <b>${cfg.telegram_enabled?'activat':'desactivat'}</b><br>Severitat mínima: <b>${esc(cfg.telegram_min_severity)}</b><br><small>${esc(cfg.security_note)}</small>`;const h=await api('/notifications/history');notificationHistory.innerHTML=table(['Hora','Canal','Sev','Alerta','Estat','Error'],h.map(x=>[fmt(x.created_at),esc(x.channel),sev(x.severity),esc(x.title||x.alert_id),st(x.status),esc(x.error)]));}
+async function saveTelegramSettings(){const body={telegram_enabled:telegramEnabled.value==='true',telegram_bot_token:telegramToken.value||null,telegram_chat_id:telegramChatId.value||null,telegram_min_severity:telegramMinSeverity.value};await api('/notifications/settings',{method:'POST',body:JSON.stringify(body)});telegramToken.value='';toast('Notificacions desades');loadNotifications()}
+async function sendTelegramTest(){const r=await api('/notifications/test',{method:'POST',body:JSON.stringify({message:'Prova enviada des del SOC Mini-SIEM Sentinel v15'})});telegramStatus.innerHTML='<pre class="raw">'+esc(JSON.stringify(r,null,2))+'</pre>';loadNotifications()}
+
+async function loadNetwork(){
+  const ev=await api('/network/events');
+  networkEvents.innerHTML=`<div class="network-card-scroll">${table(['Hora','Router','Acció','Sev','Risc','IP','Raw'],ev.map(e=>[fmt(e.event_time),esc(e.source_name),esc(human(e.event_action)),sev(e.severity),risk(e.risk_score_base),esc(e.src_ip),`<div class="raw">${esc(e.raw_log)}</div>`]))}</div>`;
+
+  const dev=await api('/network/devices');
+  networkDevices.innerHTML=`<div class="network-card-scroll">${table(['IP','MAC','Host','Últim cop','Events','Risc','Intel·ligència'],dev.map(d=>[esc(d.ip_address||d.ip||'-'),esc(d.mac_address||d.mac||'-'),esc(d.hostname||d.host||'-'),fmt(d.last_seen),esc(String(d.event_count??d.events??0)),risk(d.risk_score??d.risk??0),renderNetworkIntelCell(d)]))}</div>`;
+
+  try{
+    const ti=await api('/threat-intel/status');
+    tiStatus.innerHTML=`<div class="explain">Activat: <b>${ti.enabled}</b><br>VirusTotal: <b>${ti.virustotal_configured}</b><br>AbuseIPDB: <b>${ti.abuseipdb_configured}</b><br><small>${esc(ti.note)}</small></div>`;
+  }catch(e){
+    tiStatus.innerHTML='<div class="explain">Threat intelligence no disponible.</div>';
+  }
+}
+
+function isPrivateIpClient(ip){
+  if(!ip)return true;
+  return ip.startsWith('10.')||ip.startsWith('192.168.')||/^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)||ip.startsWith('127.')||ip.startsWith('169.254.');
+}
+
+function isDemoIpClient(ip){
+  if(!ip)return false;
+  return ip.startsWith('203.0.113.')||ip.startsWith('198.51.100.')||ip.startsWith('192.0.2.');
+}
+
+function safeIdFromIp(ip){
+  return String(ip||'').replace(/[^a-zA-Z0-9_-]/g,'_');
+}
+
+function renderNetworkIntelCell(d){
+  const ip=d.ip_address||d.ip||'';
+  if(!ip||ip==='-')return '-';
+  if(isPrivateIpClient(ip))return '<span class="ti-pill muted">IP privada</span><div class="ti-small">No s’envia a AbuseIPDB.</div>';
+  if(isDemoIpClient(ip))return '<span class="ti-pill muted">IP demo</span><div class="ti-small">Rang reservat per documentació.</div>';
+
+  const id=safeIdFromIp(ip);
+  const status=d.threat_intel_status||d.ti_status||'';
+  const score=d.threat_intel_score??d.abuse_score??null;
+  const summary=d.threat_intel_summary||d.abuse_summary||'';
+
+  if(status||score!==null){
+    return renderNetworkIntelResultHtml(ip,{status:status||'OK',score,summary});
+  }
+
+  return `<div class="ti-cell" id="ti_${id}"><button class="ti-btn" onclick="checkAbuseForNetworkIp('${ip}')">AbuseIPDB</button><span class="ti-small">No consultat</span></div>`;
+}
+
+function renderNetworkIntelResultHtml(ip,res){
+  const id=safeIdFromIp(ip);
+  const scoreRaw=res.score??res.abuseConfidenceScore??res.data?.abuseConfidenceScore??null;
+  const score=scoreRaw===null||scoreRaw===undefined?null:Number(scoreRaw);
+  let cls='good';
+  if(score!==null&&score>=75)cls='bad';
+  else if(score!==null&&score>=25)cls='warn';
+  else if(score===null)cls='muted';
+
+  const status=res.status||res.message||res.error?'INFO':'OK';
+  const summary=res.summary||makeAbuseSummary(res);
+  const label=score===null?(res.status||'Sense score'):`Abuse ${score}`;
+
+  return `<div class="ti-cell" id="ti_${id}"><span class="ti-pill ${cls}">${esc(label)}</span><div class="ti-small">${esc(summary||status)}</div><button class="ti-btn" onclick="checkAbuseForNetworkIp('${ip}')">Reconsultar</button></div>`;
+}
+
+function makeAbuseSummary(res){
+  if(res.error)return 'Error: '+res.error;
+  if(res.message)return res.message;
+  const data=res.data||res;
+  const score=data.abuseConfidenceScore??res.score??'-';
+  const reports=data.totalReports??'-';
+  const country=data.countryCode??'-';
+  const isp=data.isp??'-';
+  const usage=data.usageType??'-';
+  return `Score=${score}, reports=${reports}, país=${country}, ISP=${isp}, tipus=${usage}.`;
+}
+
+async function checkAbuseForNetworkIp(ip){
+  const id=safeIdFromIp(ip);
+  const box=document.getElementById('ti_'+id);
+  if(box)box.innerHTML='<span class="ti-small">Consultant AbuseIPDB...</span>';
+
+  try{
+    let res;
+    try{
+      res=await api('/threat-intel/abuseipdb/check',{method:'POST',body:JSON.stringify({ip})});
+    }catch(e){
+      res=await api('/threat-intel/ip/'+encodeURIComponent(ip));
+    }
+
+    if(box)box.outerHTML=renderNetworkIntelResultHtml(ip,res);
+  }catch(e){
+    if(box)box.innerHTML=`<span class="ti-pill bad">Error</span><div class="ti-small">${esc(e.message||String(e))}</div><button class="ti-btn" onclick="checkAbuseForNetworkIp('${ip}')">Reintentar</button>`;
+  }
+}
+async function demoNetwork(){const r=await api('/network/demo',{method:'POST',body:'{}'});toast('Demo de xarxa generada');await loadNetwork();await loadStats();}
+
+async function loadPlaybooks(){const p=await api('/playbooks');playbooksTable.innerHTML=table(['Nom','Regla','Sev','Passos'],p.map(x=>[esc(x.name),esc(x.trigger_rule),sev(x.severity),`<ol>${(x.steps||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ol>`]))}async function loadAudit(){const a=await api('/audit-logs?limit=100');auditTable.innerHTML=table(['Hora','Usuari','Acció','Detalls'],a.map(x=>[fmt(x.audit_time),esc(x.username),esc(x.action),`<div class="raw">${esc(typeof x.details==='string'?x.details:JSON.stringify(x.details,null,2))}</div>`]))}
+function setCtx(t){aiContext.textContent=t}function md(v){return esc(v||'').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}function addChat(role,msg){const d=document.createElement('div');d.className='bubble '+(role==='user'?'user':'ai');d.innerHTML=md(msg);chatMessages.appendChild(d);chatMessages.scrollTop=chatMessages.scrollHeight}async function askCopilot(q){const message=(q||aiQuestion.value||'').trim();if(!message)return;addChat('user',message);aiQuestion.value='';const t=document.createElement('div');t.className='bubble ai';t.textContent='Analitzant context...';chatMessages.appendChild(t);try{const r=await api('/ai/chat-v14',{method:'POST',body:JSON.stringify({message,page:current.page,alert_id:current.alert_id,event_id:current.event_id,history:[]})});t.remove();addChat('ai',r.answer)}catch(e){t.remove();addChat('ai','Error consultant l’assistent: '+e.message)}}aiQuestion.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askCopilot()}});loadAll();setInterval(()=>loadAll(),30000)
+</script>
+</body></html>
